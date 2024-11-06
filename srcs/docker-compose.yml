@@ -1,0 +1,37 @@
+version: '3.3'
+
+services:
+  db:
+    build:
+      context: ./requirements/mariadb
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+
+  wordpress:
+    build:
+      context: ./requirements/wordpress
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+    volumes:
+      - wordpress_data:/var/www/html
+    ports:
+      - "8080:80"
+
+  nginx:
+    build:
+      context: ./requirements/nginx
+    ports:
+      - "443:443"
+
+volumes:
+  db_data: {}
+  wordpress_data: {}
+
