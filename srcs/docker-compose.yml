@@ -16,7 +16,8 @@ services:
       - wordpress-network
 
   wordpress:
-    image: wordpress:5-fpm
+    build:
+      context: ./requirements/wordpress
     container_name: wordpress
     restart: always
     environment:
@@ -32,7 +33,8 @@ services:
       - wordpress-network
 
   nginx:
-    image: nginx:latest
+    build:
+      context: ./requirements/nginx
     container_name: nginx
     restart: unless-stopped
     ports:
