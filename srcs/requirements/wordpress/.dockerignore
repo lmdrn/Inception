@@ -1,4 +1,0 @@
-# Ignore temporary files and secrets
-*.tmp
-*.log
-secrets/
