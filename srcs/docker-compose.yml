@@ -37,15 +37,10 @@ services:
     build:
       context: ./requirements/nginx/
     container_name: nginx
-    restart: unless-stopped
-    stdin_open: true
-    tty: true
+    restart: on-failure
     ports:
-      - "8080:80"
       - "443:443"
     volumes:
-      - ./requirements/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./requirements/nginx/ssl:/etc/nginx/ssl
       - wordpress_data:/var/www/html
     depends_on:
       - wordpress
