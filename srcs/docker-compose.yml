@@ -36,6 +36,15 @@ services:
   nginx:
     build:
       context: ./requirements/nginx/
+    environment:
+      - WP_DOMAINNAME=${DOMAIN_NAME}
+      - WP_ADMINNAME=${WP_ADMINNAME}
+      - WP_ADMINPWD=${WP_ADMINPASS}
+      - WP_ADMINMAIL=${WP_ADMINMAIL}
+      - WP_TITLE=${WP_TITLE}
+      - WP_USERNAME=${WP_USER}
+      - WP_USERPWD=${WP_USERPASS}
+      - WP_USERMAIL=${WP_USERMAIL}
     container_name: nginx
     restart: on-failure
     ports:
