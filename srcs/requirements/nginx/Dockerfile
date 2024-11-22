@@ -8,6 +8,11 @@ RUN apk update \
 
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
-ENTRYPOINT /tools/nginx.sh
+COPY tools/nginx.sh /tmp/nginx.sh
+RUN chmod +x /tmp/nginx.sh
+
+#RUN mkdir -p /var/run/nginx
+
+ENTRYPOINT ["sh", "/tmp/nginx.sh"]
 
 EXPOSE 443/tcp

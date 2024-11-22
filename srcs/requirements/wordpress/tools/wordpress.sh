@@ -1,27 +1,25 @@
 #!/bin/sh
 
-cd /var/www/html
+sleep 5
 
-# Check if WordPress is already installed
-if [ ! -f wp-config.php ]; then
-    echo "Downloading WordPress core files..."
-    wp core download --allow-root
-
-    echo "Creating wp-config.php..."
-    wp config create --dbname="$MYSQL_DATABASE" --dbuser="$MYSQL_USER" --dbpass="$MYSQL_PASSWORD" --dbhost="$MYSQL_HOST" --allow-root
-
-    echo "Installing WordPress..."
-    wp core install --url="$DOMAIN_NAME" --title="$WP_TITLE" --admin_user="$WP_ADMINNAME" --admin_password="$WP_ADMINPASS" --admin_email="$WP_ADMINMAIL" --skip-email --allow-root
-else
-    echo "WordPress is already installed. Skipping download and installation."
+mkdir -p /var/www/html
+mkdir -p /var/www/html/wordpress
+#cp /tmp/index.html /var/www/html/index.html
+cd /var/www/html/wordpress/
+wp core download --allow-root
+echo "DOWNLOAD"
+# Skip config creation since wp-config.php is pre-copied
+if [ ! -f /var/www/html/wordpress/wp-config.php ]; then
+    echo "ERROR: wp-config.php not found in /var/www/html. Exiting."
+    exit 1
 fi
 
-# Create an additional user if necessary
-if ! wp user get "$WP_USER" --allow-root; then
-    echo "Creating additional user..."
-    wp user create "$WP_USER" "$WP_USEREMAIL" --user_pass="$WP_USERPASS" --allow-root
-fi
+#wp config create --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER --dbpass=$MYSQL_PASSWORD --dbhost=mariadb:3306 --dbcharset="utf8" --dbcollate="utf8_general_ci" --allow-root
+echo "Created config $?"
+wp core install --url=$DOMAIN_NAME/wordpress --title=$WP_TITLE --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL --skip-email --allow-root
+echo "Installed core"
+wp user create $WP_USERNAME $WP_USER_EMAIL --user_pass=$WP_USER_PASSWORD --allow-root
+echo "Created user"
+echo "Running..."
 
-# Start PHP-FPM
-php-fpm -F
-
+/usr/sbin/php-fpm7.3 -F

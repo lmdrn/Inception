@@ -1,20 +1,24 @@
 #Wordpress Dockerfile
 FROM alpine:3.19
 
-RUN apk add --update php \
-		php-fpm \
-		php-mysqli \
-		php-phar \
-		wget \
-		curl \
-		mariadb-client \
-		php-iconv
+RUN apk update \
+    && apk upgrade \
+    && apk add --no-cache php \
+    && apk add --no-cache php-fpm \
+    && apk add --no-cache php-mysqli \
+    && apk add --no-cache php-phar \
+    && apk add --no-cache curl \
+    && apk add --no-cache mariadb-client
 
-COPY	conf/www.conf /etc/php/7.3/fpm/pool.d
+RUN mkdir -p /run/php/php7.3-fpm/
+COPY /conf/www.conf /etc/php/7.3/fpm/pool.d/
 
-RUN curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --output /usr/local/bin/wp \
-    && chmod +x /usr/local/bin/wp
-EXPOSE 9000
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    && chmod +x wp-cli.phar \
+    && mv wp-cli.phar /usr/local/bin/wp \
+    && mkdir -p /run/php/php7.3-fpm/
+
+COPY ./conf/wp-config.php /var/www/html/wordpress/wp-config.php
 
 COPY ./tools/wordpress.sh /wordpress.sh
 RUN chmod +x /wordpress.sh
