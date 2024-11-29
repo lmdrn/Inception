@@ -1,5 +1,7 @@
+version: '3.8'
+
 services:
-  db:
+  mariadb:
     build:
       context: ./requirements/mariadb/
     container_name: mariadb
@@ -14,12 +16,12 @@ services:
     build:
       context: ./requirements/wordpress/
     container_name: wordpress
-    restart: always
-    env_file: .env
+    restart: no
+    env_file: .env 
     volumes:
-      - wordpress_data:/var/www/html
+      - wordpress_data:/var/www/html/wordpress
     depends_on:
-      - db
+      - mariadb
     networks:
       - wordpress-network
 
@@ -32,7 +34,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - wordpress_data:/var/www/html
+      - wordpress_data:/var/www/html/wordpress
     depends_on:
       - wordpress
     networks:

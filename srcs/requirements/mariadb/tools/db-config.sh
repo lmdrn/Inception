@@ -1,5 +1,4 @@
 #!/bin/sh
-
 #Script permettant l'ouverture de MYSQL et la creation de la db + user
 #Demarre MYSQL
 #Creation de la table, creation de l'utilisateur si il n'existe pas avec un mdp indiquer dans .env. 
@@ -11,7 +10,7 @@ chown -R mysql:mysql /run/mysqld
 chown -R mysql:mysql /var/lib/
 
 echo "Install" 
-mariadb_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql --rpm > /dev/null
+mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql --rpm > /dev/null
 echo "Database create"
 
 cat << EOF > /tmp/cmd.txt
@@ -30,5 +29,9 @@ FLUSH PRIVILEGES;
 EOF
 
 mysqld --user=mysql --bootstrap < /tmp/cmd.txt
+
+pkill maria
+
+sleep 5
 
 exec mysqld --user=mysql --console
