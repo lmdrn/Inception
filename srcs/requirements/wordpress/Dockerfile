@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM debian:12
 
 # Install necessary packages
 RUN apt-get update && apt-get install -y \
