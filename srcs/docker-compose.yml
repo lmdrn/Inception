@@ -19,7 +19,7 @@ services:
     restart: no
     env_file: .env 
     volumes:
-      - wordpress_data:/var/www/html/wordpress
+      - wordpress_data:/var/www/html
     depends_on:
       - mariadb
     networks:
@@ -30,11 +30,11 @@ services:
       context: ./requirements/nginx/
     container_name: nginx
     env_file: .env
-    restart: on-failure
+    restart: always
     ports:
       - "443:443"
     volumes:
-      - wordpress_data:/var/www/html/wordpress
+      - wordpress_data:/var/www/html
     depends_on:
       - wordpress
     networks:
